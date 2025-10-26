@@ -1,0 +1,25 @@
+[project]
+name = "book-collector"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "email-validator>=2.3.0",
+    "fastapi>=0.120.0",
+    "mypy>=1.11",
+    "pwdlib[argon2]>=0.3.0",
+    "pydantic-extra-types>=2.10.6",
+    "pyjwt>=2.10.1",
+    "sqlmodel>=0.0.27",
+    "uvicorn>=0.38.0",
+]
+
+[dependency-groups]
+dev = [
+    "fastapi[standard]>=0.120.0",
+    "mypy>=1.18.2",
+    "python-dotenv>=1.1.1",
+    "ruff>=0.14.2",
+]
