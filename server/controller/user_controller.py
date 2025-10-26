@@ -5,9 +5,10 @@ import jwt
 from pwdlib import PasswordHash
 from pwdlib.hashers.argon2 import Argon2Hasher
 from email_validator import validate_email, EmailNotValidError
-from sqlmodel import Session, select
+from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from .db.db_provider import sql_engine
+from .db.db_provider import sql_async_engine
 from .exceptions.users.email_already_registered_exception import (
     EmailAlreadyRegisteredException,
 )
@@ -20,18 +21,18 @@ from .. import User
 
 class UserController:
     def __init__(self):
-        self.engine = sql_engine
+        self.async_engine = sql_async_engine
 
         self.password_hasher = PasswordHash([Argon2Hasher()])
 
-    def create_user(self, email: str, password: str):
+    async def create_user(self, email: str, password: str):
         try:
             validate_email(email)
         except EmailNotValidError:
             raise InvalidEmailException()
-        with Session(self.engine) as session:
+        async with AsyncSession(self.async_engine) as session:
             statement = select(User).where(User.email == email)
-            result = session.exec(statement)
+            result = await session.exec(statement)
             existing_user = result.one_or_none()
             if existing_user:
                 raise EmailAlreadyRegisteredException()
@@ -39,17 +40,17 @@ class UserController:
             hashed_password = self.password_hasher.hash(password)
             new_user = User(email=email, password=hashed_password)
             session.add(new_user)
-            session.commit()
+            await session.commit()
 
-    def find_user_by_id(self, user_uuid: UUID) -> User | None:
-        with Session(self.engine) as session:
+    async def find_user_by_id(self, user_uuid: UUID) -> User | None:
+        async with AsyncSession(self.async_engine) as session:
             statement = select(User).where(User.uuid == user_uuid)
-            result = session.exec(statement)
+            result = await session.exec(statement)
             user = result.one_or_none()
 
         return user
 
-    def login(self, email: str, password: str) -> str:
+    async def login(self, email: str, password: str) -> str:
         """
         Logs in a user and returns a JWT token valid for 14 days.
         :param email:
@@ -57,9 +58,9 @@ class UserController:
         :return: JWT token valid for 14 days
         :raises IncorrectPasswordException: If provided password is incorrect
         """
-        with Session(self.engine) as session:
+        async with AsyncSession(self.async_engine) as session:
             statement = select(User).where(User.email == email)
-            result = session.exec(statement)
+            result = await session.exec(statement)
             existing_user = result.one_or_none()
 
         if existing_user is None:

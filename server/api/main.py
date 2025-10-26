@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import FastAPI, Depends
@@ -7,10 +8,16 @@ from .security import get_current_user
 from .. import User
 from ..controller.db.db_provider import init_db
 
-init_db()
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    await init_db()
+    yield
 
-app.include_router(user_router, prefix="/user", tags=["login"])
+
+app = FastAPI(lifespan=lifespan)
+
+
+app.include_router(user_router, prefix="/auth", tags=["auth"])
 
 
 @app.get("/", tags=["root"])

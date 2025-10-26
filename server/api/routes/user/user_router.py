@@ -37,13 +37,13 @@ class RegisterRequest(BaseModel):
     },
     response_model_exclude_none=True,
 )
-def register(
+async def register(
     request: RegisterRequest,
     response: Response,
     user_controller: user_controller_dependency,
 ) -> GenericSuccessResponse:
     try:
-        user_controller.create_user(request.email, request.password)
+        await user_controller.create_user(request.email, request.password)
     except (InvalidEmailException, EmailAlreadyRegisteredException) as e:
         response.status_code = 400
         return GenericSuccessResponse(success=False, info=e.__class__.__name__)
@@ -57,7 +57,7 @@ async def login_for_access_token(
     user_controller: user_controller_dependency,
 ) -> Token:
     try:
-        jwt_token = user_controller.login(form_data.username, form_data.password)
+        jwt_token = await user_controller.login(form_data.username, form_data.password)
     except IncorrectPasswordException:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
