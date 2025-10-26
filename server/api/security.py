@@ -12,7 +12,7 @@ from server.api.dependencies import get_user_controller
 from server.controller.shared_config import SharedConfig
 from server.controller.user_controller import UserController
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
@@ -25,7 +25,7 @@ class TokenData(BaseModel):
     user_uuid: str | None = None
 
 
-def get_current_user(
+async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     user_controller: Annotated[UserController, Depends(get_user_controller)],
 ):
@@ -42,7 +42,7 @@ def get_current_user(
         token_data = TokenData(user_uuid=user_uuid)
     except InvalidTokenError:
         raise credentials_exception
-    user = user_controller.find_user_by_id(user_uuid=UUID(token_data.user_uuid))
+    user = await user_controller.find_user_by_id(user_uuid=UUID(token_data.user_uuid))
     if user is None:
         raise credentials_exception
     return user
