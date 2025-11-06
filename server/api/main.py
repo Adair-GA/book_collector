@@ -3,7 +3,8 @@ from typing import Annotated
 
 from fastapi import FastAPI, Depends
 
-from .routes.user.user_router import user_router
+from .routes.auth.auth_router import user_router
+from .routes.books.books_router import book_router
 from .security import get_current_user
 from .. import User
 from ..controller.db.db_provider import init_db
@@ -18,6 +19,7 @@ app = FastAPI(lifespan=lifespan)
 
 
 app.include_router(user_router, prefix="/auth", tags=["auth"])
+app.include_router(book_router, prefix="/books", tags=["books"])
 
 
 @app.get("/", tags=["root"])

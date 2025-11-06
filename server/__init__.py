@@ -6,4 +6,4 @@ from server.model.collection import Collection
 
 from server.model.relationships import book_user_relationship
 from server.model.relationships import book_collection_relationship
-from server.model.relationships import book_user_relationship
+from server.model.relationships import book_author_relationship
