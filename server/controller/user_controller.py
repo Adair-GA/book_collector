@@ -22,7 +22,6 @@ from .. import User
 class UserController:
     def __init__(self):
         self.async_engine = sql_async_engine
-
         self.password_hasher = PasswordHash([Argon2Hasher()])
 
     async def create_user(self, email: str, password: str):
@@ -52,7 +51,7 @@ class UserController:
 
     async def login(self, email: str, password: str) -> str:
         """
-        Logs in a user and returns a JWT token valid for 14 days.
+        Logs in a auth and returns a JWT token valid for 14 days.
         :param email:
         :param password:
         :return: JWT token valid for 14 days

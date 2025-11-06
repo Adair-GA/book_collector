@@ -1,0 +1,2 @@
+class InvalidOpenLibraryResponse(Exception):
+    pass

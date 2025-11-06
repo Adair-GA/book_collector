@@ -8,6 +8,7 @@ from jwt import InvalidTokenError
 from pydantic import BaseModel
 from starlette import status
 
+from server import User
 from server.api.dependencies import get_user_controller
 from server.controller.shared_config import SharedConfig
 from server.controller.user_controller import UserController
@@ -46,3 +47,6 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+current_user_dependency = Annotated[User, Depends(get_current_user)]
