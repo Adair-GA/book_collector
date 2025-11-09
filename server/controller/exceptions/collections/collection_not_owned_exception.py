@@ -1,0 +1,2 @@
+class CollectionNotOwnedException(Exception):
+    pass
