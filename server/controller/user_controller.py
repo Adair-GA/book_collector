@@ -26,7 +26,7 @@ class UserController:
 
     async def create_user(self, email: str, password: str):
         try:
-            validate_email(email)
+            validate_email(email, check_deliverability=False)
         except EmailNotValidError:
             raise InvalidEmailException()
         async with AsyncSession(self.async_engine) as session:

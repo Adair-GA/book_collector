@@ -18,6 +18,9 @@ from server.controller.exceptions.users.incorrect_password_exception import (
 from server.controller.exceptions.users.invalid_email_exception import (
     InvalidEmailException,
 )
+from server.controller.exceptions.users.user_not_found_exception import (
+    UserNotFoundException,
+)
 from server.controller.user_controller import UserController
 
 user_router = APIRouter()
@@ -58,11 +61,10 @@ async def login_for_access_token(
 ) -> Token:
     try:
         jwt_token = await user_controller.login(form_data.username, form_data.password)
-    except IncorrectPasswordException:
+    except (UserNotFoundException, IncorrectPasswordException):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
     return Token(access_token=jwt_token, token_type="bearer")
