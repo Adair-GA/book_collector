@@ -1,0 +1,17 @@
+<mat-toolbar class="border-b-gray-400 border-b-1 flex align-baseline">
+  <a [routerLink]="['/']">Book collector</a>
+  <div class="ml-8 gap-8 flex">
+    <a class="text-sm" [routerLink]="['/my-books']">Books</a>
+    <a class="text-sm" [routerLink]="['/my-collections']">Collections</a>
+  </div>
+
+  <div class="ml-auto">
+    <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </div>
+
+  <mat-menu #accountMenu>
+    <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+  </mat-menu>
+</mat-toolbar>

@@ -1,28 +1,46 @@
 <div class="flex w-full h-full items-center justify-center">
-    <mat-card class="flex ">
-        <mat-card-header class="mb-4">
-            <div class="flex justify-center w-full">
-                @if (this.mode()) {}
-                <p class="text-3xl">Login</p>
-            </div>
-        </mat-card-header>
-        <mat-card-content>
-            <form [formGroup]="form" (ngSubmit)="loginSubmit()">
-                <mat-form-field class="w-full" [appearance]="'outline'">
-                    <input matInput placeholder="Email" name="email" formControlName="email" type="email">
-                </mat-form-field>
-                <mat-form-field [appearance]="'outline'" class="w-full">
-                    <input matInput placeholder="Password" type="password" formControlName="password" name="password"
-                        required>
-                </mat-form-field>
-                <div class="mt-4 flex">
-                    <button class="ml-auto" mat-flat-button type="submit" [disabled]="!form.valid">Login</button>
-                </div>
-            </form>
-        </mat-card-content>
-        <mat-card-actions class="flex">
-        </mat-card-actions>
-
-    </mat-card>
-
+  <mat-card class="flex">
+    <mat-card-header class="mb-4">
+      <div class="flex justify-center w-full">
+        @if (this.mode() == 'login') {
+          <p class="text-3xl">Login</p>
+        } @else {
+          <p class="text-3xl">Register</p>
+        }
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <mat-form-field class="w-full" [appearance]="'outline'">
+          <input matInput placeholder="Email" name="email" formControlName="email" type="email"/>
+        </mat-form-field>
+        <mat-form-field [appearance]="'outline'" class="w-full">
+          <input
+            matInput
+            placeholder="Password"
+            type="password"
+            formControlName="password"
+            name="password"
+            required
+          />
+        </mat-form-field>
+        <div class="mt-4 flex">
+          <span class="cursor-pointer underline text-blue-600" (click)="changeMode()">
+            @if (this.mode() == 'login') {
+              Ir a registro
+            } @else {
+              Ir a login
+            }
+          </span>
+          <button class="ml-auto" mat-flat-button type="submit" [disabled]="!form.valid">
+            @if (this.mode() == 'login') {
+              Login
+            } @else {
+              Register
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 </div>
