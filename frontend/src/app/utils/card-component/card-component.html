@@ -1,0 +1,11 @@
+<div
+  class="card"
+  #card
+  (mousemove)="rotateToMouse($event)"
+  (mouseleave)="reset()"
+  [style.background-image]="'url(' + this.bg() + ')'"
+  [style.background-color]="this.bg() ? '': 'white'"
+>
+  <span class="select-none">{{ this.text() }}</span>
+  <div class="glow"></div>
+</div>

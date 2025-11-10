@@ -5,10 +5,20 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { UserService } from '../../services/user-service';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { CardComponent } from '../../utils/card-component/card-component';
 
 @Component({
   selector: 'app-dashboard-navbar',
-  imports: [MatToolbar, RouterLink, MatIconButton, MatIcon, MatMenuTrigger, MatMenu, MatMenuItem],
+  imports: [
+    MatToolbar,
+    RouterLink,
+    MatIconButton,
+    MatIcon,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    CardComponent,
+  ],
   templateUrl: './dashboard-navbar.component.html',
   styleUrl: './dashboard-navbar.component.css',
 })
