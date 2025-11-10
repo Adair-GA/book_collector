@@ -1,8 +1,8 @@
-import { inject, Injectable, signal, WritableSignal } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, map, Observable, of, switchMap } from 'rxjs';
-import { jwtDecode } from 'jwt-decode';
+import {inject, Injectable, signal, WritableSignal} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {catchError, map, Observable, of, switchMap} from 'rxjs';
+import {jwtDecode, InvalidTokenError} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -20,12 +20,16 @@ export class UserService {
       return;
     }
 
-    const decrypted = jwtDecode(token);
-    if (decrypted.exp != null && decrypted.exp > Date.now() / 1000) {
-      console.log(decrypted);
-      this.isLoggedIn = signal(true);
-    } else {
-      this.isLoggedIn = signal(false);
+    try {
+      const decrypted = jwtDecode(token);
+      if (decrypted.exp != null && decrypted.exp > Date.now() / 1000) {
+        console.log(decrypted);
+        this.isLoggedIn = signal(true);
+      } else {
+        this.isLoggedIn = signal(false);
+      }
+    } catch (_) {
+      this.isLoggedIn = signal(false)
     }
   }
 
@@ -38,11 +42,11 @@ export class UserService {
       map((value: { access_token: string }) => {
         localStorage.setItem('authToken', value.access_token);
         this.isLoggedIn.set(true);
-        return { success: true };
+        return {success: true};
       }),
       catchError((err) => {
         if (err instanceof HttpErrorResponse && err.status == 401) {
-          return of({ success: false });
+          return of({success: false});
         }
         throw err;
       }),
@@ -61,7 +65,7 @@ export class UserService {
         }),
         catchError((err) => {
           if (err instanceof HttpErrorResponse && err.status == 401) {
-            return of({ success: false });
+            return of({success: false});
           }
           throw err;
         }),
